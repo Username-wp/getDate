@@ -1,0 +1,88 @@
+#!/bin/bash
+#调用日期
+#作者：Wp269504042@163.com
+#创建时间：2019/11/13
+#
+#获取某个时间n天前的日期
+param_date=""
+if [ ${#1} -gt 0 ]; then
+param_date=expr substr "$1" 1 10
+fi;
+function get_date_ago(){
+sec=date -d $1 +%s
+sec_dayago=$((sec-86400*$2))
+echo date -d @$sec_dayago +"%Y-%m-%d"
+}
+
+#获取昨天时间并验证
+function isValidDate(){
+date -d "$1" "+%F"|grep -q "$1" 2>/dev/null
+if [ $? = 1 ]; then
+date -d "$1" "+%Y%m%d"|grep -q "$1" 2>/dev/null
+if [ $? = 1 ]; then
+return 1
+else
+return 0
+fi
+else
+return 0
+fi
+}
+#t_date=date +"%Y-%m-%d" #当前日期
+
+#输入参数判断逻辑
+#echo "get_date.sh "$param_date
+if [ $# -eq 1 ];then
+isValidDate $param_date
+if [ $? = 1 ]; then
+echo "invalid date"
+exit 1
+else
+t_date=date -d $param_date +"%Y-%m-%d"
+y_date=$t_date
+fi
+else
+t_date=date +"%Y-%m-%d"
+y_date=get_date_ago $t_date 1
+fi
+
+ago_1=get_date_ago $y_date 1	#y_date的1天前的日期
+ago_7=get_date_ago $y_date 7	#y_date的7天前的日期
+ago_14=get_date_ago $y_date 14 #y_date的14天前的日期
+ago_90=get_date_ago $y_date 90 #y_date的90天前的日期
+ago_40=get_date_ago $y_date 40 #y_date的40天前的日期
+ago_30=get_date_ago $y_date 30 #y_date的30天前的日期
+ago_47=get_date_ago $y_date 47 #y_date的47天前的日期
+ago_120=get_date_ago $y_date 120 #y_date的120天前的日期
+ago_180=get_date_ago $y_date 180 #y_date的180天前的日期
+ago_365=get_date_ago $y_date 365 #y_date的365天前的日期
+#last_mon_begin=date -d "$now_mon_begin last month" +"%Y-%m-%d" #n_date的上个月的第一天
+#last_mon_end=date -d "$now_mon_begin last day" +"%Y-%m-%d" #n_date的上个月的最后一天
+dayofweek=date -d $t_date +%w #判断t_date是周几
+now_mon_begin=date -d $t_date +"%Y-%m-01" #基于t_date的当月第一天
+now_year_begin=date -d $t_date +"%Y-01-01" #基于t_date的当年第一天
+last_mon_begin=date -d "$now_mon_begin last month" +"%Y-%m-%d" #n_date的上个月的第一天
+last_mon_end=date -d "$now_mon_begin last day" +"%Y-%m-%d" #n_date的上个月的最后一天
+last_year_begin=date -d "$now_year_begin last year" +"%Y-%m-%d" #基于now_year_begin的当年第一天
+last_year_end=date -d "$now_year_begin last day" +"%Y-%m-%d" #基于now_year_begin的当年最后一天
+ago_six_month_begin=date -d "$now_mon_begin -6 month" +"%Y-%m-%d" #基于now_mon_begin的前6个月日期
+ago_seven_month_end=date -d "$ago_six_month_begin last day" +"%Y-%m-%d" #基于ago_six_month_begin减一天获取前七月的最后一天
+ago_six_year_begin=date -d "$now_year_begin -6 year" +"%Y-%m-%d" #基于now_year_begin的前6个月日期
+ago_seven_year_end=date -d "$ago_six_year_begin last day" +"%Y-%m-%d" ##基于ago_six_year_begin减一天获取前七年的最后一天
+last_mon=date -d "$t_date last month" +"%Y-%m" #上个月的数据
+last_mon_YYYYMM=date -d "$t_date last month" +"%Y%m" #上个月的数据
+last_mon01=date -d "$t_date last month" +"%Y-%m-01" #上个月一号的数据
+last_last_mon=date -d "$last_mon01 last month " +"%Y-%m" #上上个月的数据
+v_currMon_rq=date +%Y-%m-01 #每月对应的时间执行脚本默认每月一号;
+y_date_beg="$y_date 00:00:00"
+y_date_end="$y_date 23:59:59"
+last_mon_begin_detail="$last_mon_begin 00:00:00"
+last_mon_end_detail="$last_mon_end 23:59:59"
+start_day="${y_date_beg}"
+end_day="${y_date_end}"
+partition_day="${y_date}"
+#v_currYear=date +"%Y"
+v_currYear=2018
+n_date=date +"%Y-%m-%d"
+n_mon01=date +"%Y-%m"'-01'
+echo "${y_date}"
